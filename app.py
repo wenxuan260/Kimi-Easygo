@@ -6,7 +6,8 @@ from openai import OpenAI
 app = Flask(__name__)
 
 client = OpenAI(
-    api_key=os.environ.get("MOONSHOT_API_KEY"),  # 推荐使用 Render 的环境变量
+    #api_key=os.environ.get("MOONSHOT_API_KEY"),  # 推荐使用 Render 的环境变量
+    api_key=sk-MMw06tR25JX52nHURjEiheSw6cV1qTiywnj8X9bsnO1roXnf
     base_url="https://api.moonshot.cn/v1"
 )
 
