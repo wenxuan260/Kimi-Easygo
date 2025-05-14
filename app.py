@@ -1,14 +1,32 @@
 import os
 import base64
+import re
 from flask import Flask, request, jsonify
 from openai import OpenAI
 
 app = Flask(__name__)
 
 client = OpenAI(
-    api_key=os.environ.get("MOONSHOT_API_KEY"),  # 推荐使用 Render 的环境变量
+    api_key=os.environ.get("MOONSHOT_API_KEY"),
     base_url="https://api.moonshot.cn/v1"
 )
+
+def detect_image_type(b64_str):
+    # 已包含 data:image/... 前缀，直接返回
+    if b64_str.startswith("data:image/"):
+        return b64_str
+
+    # 尝试判断文件类型
+    if b64_str.startswith("/9j/"):
+        mime = "jpeg"
+    elif b64_str.startswith("iVBOR"):
+        mime = "png"
+    elif b64_str.startswith("R0lGOD"):
+        mime = "gif"
+    else:
+        mime = "jpeg"  # 默认类型
+
+    return f"data:image/{mime};base64,{b64_str}"
 
 @app.route("/recognize", methods=["POST"])
 def recognize():
@@ -18,7 +36,7 @@ def recognize():
     if not base64_image:
         return jsonify({"error": "base64_image not provided"}), 400
 
-    image_url = f"data:image/jpeg;base64,{base64_image}"
+    image_url = detect_image_type(base64_image)
 
     try:
         completion = client.chat.completions.create(
