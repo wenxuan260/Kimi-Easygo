@@ -1,6 +1,5 @@
 import os
 import base64
-import re
 from flask import Flask, request, jsonify
 from openai import OpenAI
 
@@ -11,12 +10,11 @@ client = OpenAI(
     base_url="https://api.moonshot.cn/v1"
 )
 
-def detect_image_type(b64_str):
-    # 已包含 data:image/... 前缀，直接返回
+# 判断图片 MIME 类型并添加 data URI 前缀
+def wrap_base64_image(b64_str):
     if b64_str.startswith("data:image/"):
         return b64_str
 
-    # 尝试判断文件类型
     if b64_str.startswith("/9j/"):
         mime = "jpeg"
     elif b64_str.startswith("iVBOR"):
@@ -24,7 +22,7 @@ def detect_image_type(b64_str):
     elif b64_str.startswith("R0lGOD"):
         mime = "gif"
     else:
-        mime = "jpeg"  # 默认类型
+        mime = "jpeg"
 
     return f"data:image/{mime};base64,{b64_str}"
 
@@ -36,7 +34,7 @@ def recognize():
     if not base64_image:
         return jsonify({"error": "base64_image not provided"}), 400
 
-    image_url = detect_image_type(base64_image)
+    image_url = wrap_base64_image(base64_image)
 
     try:
         completion = client.chat.completions.create(
@@ -47,7 +45,7 @@ def recognize():
                     "role": "user",
                     "content": [
                         {"type": "image_url", "image_url": {"url": image_url}},
-                        {"type": "text", "text": "从下面的图片中提取信息：起始地，目的地，行驶距离，行驶时长，驾驶时间（日期时间），并用 JSON 返回：请返回格式如下：{\n \"start_location\": \"\",\n \"end_location\": \"\",\n \"distance\": \"\",\n \"duration\": \"\",\n \"start_time\": \"\"\n}"}
+                        {"type": "text", "text": "请从图片中提取以下字段并用 JSON 返回：起始地、目的地、行驶距离、行驶时长、驾驶时间（日期时间）。返回格式为：{\n \"start_location\": \"\",\n \"end_location\": \"\",\n \"distance\": \"\",\n \"duration\": \"\",\n \"start_time\": \"\"\n}"}
                     ]
                 }
             ]
@@ -59,4 +57,5 @@ def recognize():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
 
