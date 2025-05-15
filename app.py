@@ -27,6 +27,8 @@ def recognize():
         # 把字符串结果转成 dict
         result_json = json.loads(completion.choices[0].message.content)
 
+        print(result_json)
+
         # 直接返回 JSON 对象
         return jsonify(result_json)
 
