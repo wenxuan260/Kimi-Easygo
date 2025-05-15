@@ -44,7 +44,7 @@ def recognize():
                     "role": "user",
                     "content": [
                         {"type": "image_url", "image_url": {"url": image_url}},
-                        {"type": "text", "text": "从下面的图片中提取信息：起始地，目的地，行驶距离，行驶时长，驾驶时间（日期时间），并用 JSON 返回：请返回格式如下：{\n \"start_location\": \"\",\n \"end_location\": \"\",\n \"distance\": \"\",\n \"duration\": \"\",\n \"start_time\": \"\"\n}"}
+                        {"type": "text","text": "请从下面的图片中提取以下字段：起始地（start_location）、目的地（end_location）、行驶距离（distance）、行驶时长（duration）、出发时间（start_time）。请你直接返回一个合法的 JSON 对象，严格按照如下格式：\n{\n  \"start_location\": \"\",\n  \"end_location\": \"\",\n  \"distance\": \"\",\n  \"duration\": \"\",\n  \"start_time\": \"\"\n}\n注意：不要返回任何说明文字，不要添加代码块符号（如```），不要把整个 JSON 包在字符串中。"}
                     ]
                 }
             ]
