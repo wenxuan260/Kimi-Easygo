@@ -44,7 +44,7 @@ def recognize():
                     "role": "user",
                     "content": [
                         {"type": "image_url", "image_url": {"url": image_url}},
-                        {"type": "text", "text": "请从以下图片中准确提取以下信息字段，并严格按照 JSON 格式返回：{\n  "start_location": "出发地（如：北京市）",\n  "end_location": "目的地（如：天津市）",\n  "distance": "行驶距离，（如：120.5）", \n  "duration": "行驶时长，格式为小时:分钟:秒（如：00:48:47）", \n  "start_time": "出发时间，格式为 yyyy-MM-dd HH:mm（如：2025-05-22 08:30）"\n}\n要求： \n1. 所有字段必须提取自图片中能识别到的文字内容；\n2. 若某字段无法识别，请填入空字符串 ""，不要省略字段；\n3. 返回结果必须是合法的 JSON 字符串。"}
+                        {"type": "text", "text": "从下面的图片中提取信息：起始地，目的地，行驶距离，行驶时长，驾驶时间（日期时间），并用 JSON 返回，严格执行如下格式：{\n \"start_location\": \"\",\n \"end_location\": \"\",\n \"distance\": \"\",\n \"duration\": \"\",\n \"start_time\": \"\"\n}"}
                     ]
                 }
             ]
