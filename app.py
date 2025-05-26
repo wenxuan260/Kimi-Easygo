@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, jsonify
 from openai import OpenAI
 import logging
- 
+logging.basicConfig(level=logging.INFO) 
 app = Flask(__name__)
  
 client = OpenAI(
