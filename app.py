@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, jsonify
 from openai import OpenAI
+import logging
  
 app = Flask(__name__)
  
@@ -53,6 +54,7 @@ def recognize():
         return jsonify(completion.choices[0].message.content)
  
     except Exception as e:
+        logging.error("发生错误：%s", e, exc_info=True)
         return jsonify({"error": str(e)}), 500
  
 if __name__ == "__main__":
